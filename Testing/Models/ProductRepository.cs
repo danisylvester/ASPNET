@@ -16,9 +16,40 @@ namespace Testing.Models
             _conn = conn;
         }
 
+        public Product AssignCategory()
+        {
+            var categoryList = GetCategories();
+            var product = new Product();
+            product.Categories = categoryList;
+            return product;
+        }
+
         public IEnumerable<Product> GetAllProducts()
         {
             return _conn.Query<Product>("SELECT * FROM Products;");
+        }
+
+        public IEnumerable<Category> GetCategories()
+        {
+            return _conn.Query<Category>("SELECT * FROM Categories;");
+        }
+
+        public Product GetProduct(int id)
+        {
+            return _conn.QuerySingle<Product>("SELECT * FROM Products WHERE ProductID = @productID;",
+                new { productID = id });
+        }
+
+        public void InsertProduct(Product productToInsert)
+        {
+            _conn.Execute("INSERT INTO Products (Name, Price, CategoryID) VALUES (@Name, @Price, @CategoryID);",
+                new { Name = productToInsert.Name, Price = productToInsert.Price, CategoryID = productToInsert.CategoryID });
+        }
+
+        public void UpdateProduct(Product product)
+        {
+            _conn.Execute("UPDATE Products SET Name = @name, Price = @price WHERE ProductID = @id;",
+                new { name = product.Name, price = product.Price, id = product.ProductID });
         }
     }
 }
