@@ -56,6 +56,12 @@ namespace Testing.Models
                 new { Name = productToInsert.Name, Price = productToInsert.Price, CategoryID = productToInsert.CategoryID });
         }
 
+        public IEnumerable<Product> SearchProduct(string searchString)
+        {
+            return _conn.Query<Product>("SELECT * FROM Products WHERE Name LIKE @name;",
+                new { name = "%" + searchString + "%" });
+        }
+
         public void UpdateProduct(Product product)
         {
             _conn.Execute("UPDATE Products SET Name = @name, Price = @price WHERE ProductID = @id;",

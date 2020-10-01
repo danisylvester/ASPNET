@@ -60,5 +60,11 @@ namespace Testing.Controllers
             repo.DeleteProduct(product);
             return RedirectToAction("Index");
         }
+
+        public IActionResult Search(string searchString)
+        {
+            var search = repo.SearchProduct(searchString);
+            return View(search);
+        }
     }
 }
